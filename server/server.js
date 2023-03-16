@@ -10,15 +10,15 @@ const app = express();
 app.use(cors());
 app.use(bp.json());
 
-// connect to mongodb
+// connect mongodb
 mongoose.connect(process.env.DATABASE_URL);
 
-app.get("/book", async (request, response) => {
+app.get("/books", async (request, response) => {
   console.log("Query String: ", request.query);
 
-  // try catch
+  // error handiling try/ if fails catch error
   try {
-    const books = await Books.find(request.query);
+    const books = await Book.find(request.query);
     response.status(200).json(books);
   } catch (error) {
     console.log(error);
@@ -37,7 +37,7 @@ app.post("/books", async (request, response) => {
   }
 });
 
-// this should delet book by ID number
+// this should! delete book by ID number
 app.delete("/books/:id", async (request, response) => {
   try {
     const id = request.params.id;

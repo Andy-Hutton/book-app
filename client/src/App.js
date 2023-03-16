@@ -3,6 +3,9 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
+import Home from "./Home";
+import BookDetails from "./BookDetails";
+
 function App() {
   const [books, setBooks] = useState([]);
   const [author, setAuthor] = useState("");
@@ -15,7 +18,7 @@ function App() {
 
   useEffect(() => {
     getBooks();
-  }, []);
+  }, [author]);
 
   async function getBooks() {
     let API = "http://localhost:8080/books";
@@ -66,53 +69,33 @@ function App() {
   }
 
   return (
-    <div className="App">
-      <h1>Books</h1>
-      <input
-        onChange={handleAuthor}
-        value={author}
-        placeholder="Filter by author"
-      />
-      {books.map((book, index) => {
-        return (
-          <div key={index}>
-            <h3>{book.name}</h3>
-            <p>{book.author}</p>
-            <p>{book.genre}</p>
-            <p>{book.isbn}</p>
-            <span onClick={() => deleteBook(book._id, book.name)}>X</span>
-          </div>
-        );
-      })}
-      <h2>Add a new Book</h2>
-      <form onSubmit={handleAddBook}>
-        <input
-          name="name"
-          value={form.name}
-          onChange={handleChange}
-          placeholder="Name"
-        />
-        <input
-          name="author"
-          value={form.author}
-          onChange={handleChange}
-          placeholder="Author"
-        />
-        <input
-          name="genre"
-          value={form.genre}
-          onChange={handleChange}
-          placeholder="Genre"
-        />
-        <input
-          name="isbn"
-          value={form.isbn}
-          onChange={handleChange}
-          placeholder="Isbn"
-        />
-        <button type="submit">Add new Book</button>
-      </form>
-    </div>
+    <BrowserRouter>
+      <div className="App">
+        <h1>The Big Book Storage Page</h1>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <div class="flex-container">
+                <Home
+                  handleAuthor={handleAuthor}
+                  author={author}
+                  books={books}
+                  deleteBook={deleteBook}
+                  handleAddBook={handleAddBook}
+                  form={form}
+                  handleChange={handleChange}
+                />
+              </div>
+            }
+          />
+          <Route path="/book/:id" element={<BookDetails />} />
+        </Routes>
+        <div class="footer">
+          <p>© Andy Hutton 2023</p>
+        </div>
+      </div>
+    </BrowserRouter>
   );
 }
 
